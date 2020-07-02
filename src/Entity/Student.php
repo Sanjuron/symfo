@@ -20,12 +20,12 @@ class Student
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=100)
+     * @ORM\Column(type="string", length=200)
      */
     private $firstname;
 
     /**
-     * @ORM\Column(type="string", length=100)
+     * @ORM\Column(type="string", length=200)
      */
     private $lastname;
 
@@ -34,10 +34,6 @@ class Student
      */
     private $email;
 
-        /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    private $birthyear;
 
     /**
      * @ORM\ManyToOne(targetEntity=SchoolYear::class, inversedBy="students")
@@ -50,9 +46,16 @@ class Student
      */
     private $tags;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=Project::class, mappedBy="students")
+     */
+    private $projects;
+
+
     public function __construct()
     {
         $this->tags = new ArrayCollection();
+        $this->projects = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -97,17 +100,6 @@ class Student
     }
 
 
-    public function getBirthyear(): ?int
-    {
-        return $this->birthyear;
-    }
-
-    public function setBirthyear(?int $birthyear): self
-    {
-        $this->birthyear = $birthyear;
-
-        return $this;
-    }
 
     public function getSchoolYear(): ?SchoolYear
     {
@@ -149,5 +141,31 @@ class Student
         return $this;
     }
 
+    /**
+     * @return Collection|Project[]
+     */
+    public function getProjects(): Collection
+    {
+        return $this->projects;
+    }
+
+    public function addProject(Project $project): self
+    {
+        if (!$this->projects->contains($project)) {
+            $this->projects[] = $project;
+            $project->addStudent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProject(Project $project): self
+    {
+        if ($this->projects->contains($project)) {
+            $this->projects->removeElement($project);
+            $project->removeStudent($this);
+        }
+
+        return $this;
+    }
 }
-        

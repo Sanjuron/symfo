@@ -2,15 +2,15 @@
 
 namespace App\Entity;
 
-use App\Repository\TagRepository;
+use App\Repository\ProjectRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=TagRepository::class)
+ * @ORM\Entity(repositoryClass=ProjectRepository::class)
  */
-class Tag
+class Project
 {
     /**
      * @ORM\Id()
@@ -24,13 +24,13 @@ class Tag
      */
     private $name;
 
-        /**
+    /**
      * @ORM\Column(type="text", nullable=true)
      */
     private $description;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Student::class, inversedBy="tags")
+     * @ORM\ManyToMany(targetEntity=Student::class, inversedBy="projects")
      */
     private $students;
 
@@ -52,6 +52,18 @@ class Tag
     public function setName(string $name): self
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): self
+    {
+        $this->description = $description;
 
         return $this;
     }
@@ -78,26 +90,6 @@ class Tag
         if ($this->students->contains($student)) {
             $this->students->removeElement($student);
         }
-
-        return $this;
-    }
-
-    /**
-     * Get the value of description
-     */ 
-    public function getDescription() : ?text
-    {
-        return $this->description;
-    }
-
-    /**
-     * Set the value of description
-     *
-     * @return  self
-     */ 
-    public function setDescription(text $description): self
-    {
-        $this->description = $description;
 
         return $this;
     }
